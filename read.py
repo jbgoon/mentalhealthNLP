@@ -9,5 +9,5 @@ c.Hide_output = True
 twint.run.Search(c)
 
 tweets_df = twint.storage.panda.Tweets_df
-
-print(tweets_df.tweet)
+tweets_df = tweets_df.tweet
+tweets_df.to_csv("raw_tweets.csv")
