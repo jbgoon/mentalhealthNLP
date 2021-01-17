@@ -3,8 +3,9 @@
 def pull_tweets_keyword(keyword, limit):
     # keyword = string for what to look for in tweets
     # limit = max # of tweets
+    
     c = twint.Config()
-    c.Search=keyword
+    c.Search = keyword
     c.Limit = limit
     c.Lang = "en"
     c.Pandas = True
