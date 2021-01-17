@@ -44,31 +44,44 @@ def get_train_test(tweets_df):
     # get train data features
     features = [tweet for tweet in x_train]
     features = ' '.join(features)
-    unique = list(set(features.split(' ')))
+    feature_list = list(set(features.split(' ')))
 
     # tokenize both w tfidf
-    vectorizer = TfidfVectorizer(vocabulary=unique, use_idf=True, lowercase=False)
+    vectorizer = TfidfVectorizer(vocabulary=feature_list, use_idf=True, lowercase=False)
     x_train_tfidf = vectorizer.fit_transform(x_train)
     x_test_tfidf = vectorizer.fit_transform(x_test)
 
-    return x_train_tfidf, x_test_tfidf, y_train, y_test
+    return x_train_tfidf, x_test_tfidf, y_train, y_test, feature_list
 
 
 # build model (Naive Bayes, Logistic Bayes, Neural Network)
-# test accuracy, F1 (harmonic mean of precision/recall)
 def naive_bayes(x_train, x_test, y_train, y_test):
     model = MultinomialNB().fit(x_train,y_train)
-    predictions = model.predict(x_test)
     accuracy = model.score(x_test, y_test)
 
-    return accuracy
-
-########################################################################################################################
+    return accuracy, model
 
 
-data = pd.read_csv(
-    'https://raw.githubusercontent.com/viritaromero/Detecting-Depression-in-Tweets/master/sentiment_tweets3.csv')
-processed = clean_tweets(data)
-x_train, x_test, y_train, y_test = get_train_test(processed)
-accuracy = naive_bayes(x_train, x_test, y_train, y_test)
-print(accuracy)
+def is_concern(text):
+    # get data
+    data = pd.read_csv(
+        'https://raw.githubusercontent.com/viritaromero/Detecting-Depression-in-Tweets/master/sentiment_tweets3.csv')
+    processed = clean_tweets(data)
+
+    # build model
+    x_train, x_test, y_train, y_test, features = get_train_test(processed)
+    _, model = naive_bayes(x_train, x_test, y_train, y_test)
+
+    # clean: handle,sites, non-alpha
+    remove_handle = re.sub(r'@[\w]+', '', text)
+    remove_site = re.sub(r'http\S+', '', remove_handle)
+    clean_text = re.sub(r'[^A-Za-z ]+', '', remove_site)
+
+    # vectorize input text with tfidf
+    vectorizer = TfidfVectorizer(vocabulary=features, use_idf=True, lowercase=False)
+    text_tfidf = vectorizer.fit_transform([clean_text])
+
+    # classify text using model
+    prediction = int(model.predict(text_tfidf))
+
+    return prediction
