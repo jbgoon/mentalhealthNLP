@@ -5,21 +5,27 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 
 
-# cleaning raw tweet data + tokenization
+def process_text(sentence):
+    # remove handles + sites
+    remove_handle = re.sub(r'@[\w]+', '', sentence)
+    remove_site = re.sub(r'(http\S+) | (www.\S+) | (\S+.com/\S+) | (\S+.com)', '', remove_handle)
+
+    # remove dashes + special chars + nums (isalpha)
+    dashless = remove_site.replace('-', ' ').replace('/', ' ')
+    clean_sentence = re.sub(r'[^A-Za-z ]+', '', dashless)
+
+    return clean_sentence
+
+
 def clean_tweets(tweets_df):
     # loop through tweets in df
     tokens = []
     clean_tweet_list = []
     for index, row in tweets_df.iterrows():
-        # remove handle + website
         tweet = row[1]
-        remove_handle = re.sub(r'@[\w]+', '', tweet)
-        remove_site = re.sub(r'http\S+', '', remove_handle)
+        clean_tweet = process_text(tweet)
 
-        # remove special chars + nums (isalpha)
-        alpha = re.sub(r'[^A-Za-z ]+', '', remove_site)
-
-        word_list = alpha.split(' ')
+        word_list = clean_tweet.split(' ')
         clean_list = []
         for word in word_list:
             if (word == '') or (word == '\n') or (word == '\t'):
@@ -64,18 +70,15 @@ def naive_bayes(x_train, x_test, y_train, y_test):
 
 def is_concern(text):
     # get data
-    data = pd.read_csv(
-        'https://raw.githubusercontent.com/viritaromero/Detecting-Depression-in-Tweets/master/sentiment_tweets3.csv')
-    processed = clean_tweets(data)
+    data_site = pd.read_csv('combined_tweets.csv')
+    processed = clean_tweets(data_site)
 
     # build model
     x_train, x_test, y_train, y_test, features = get_train_test(processed)
     _, model = naive_bayes(x_train, x_test, y_train, y_test)
 
-    # clean: handle,sites, non-alpha
-    remove_handle = re.sub(r'@[\w]+', '', text)
-    remove_site = re.sub(r'http\S+', '', remove_handle)
-    clean_text = re.sub(r'[^A-Za-z ]+', '', remove_site)
+    # clean up input message
+    clean_text = process_text(text)
 
     # vectorize input text with tfidf
     vectorizer = TfidfVectorizer(vocabulary=features, use_idf=True, lowercase=False)
