@@ -75,7 +75,7 @@ def is_concern(text):
 
     # build model
     x_train, x_test, y_train, y_test, features = get_train_test(processed)
-    _, model = naive_bayes(x_train, x_test, y_train, y_test)
+    accuracy, model = naive_bayes(x_train, x_test, y_train, y_test)
 
     # clean up input message
     clean_text = process_text(text)
