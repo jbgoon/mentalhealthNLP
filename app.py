@@ -19,16 +19,3 @@ def sms_reply():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-# from flask import Flask, render_template
-# from dotenv import load_dotenv
-# from utils import fetch_sms
-#
-# # loads .env variables containing twilio sid and auth token
-# load_dotenv()
-# app = Flask(__name__)
-#
-# @app.route("/")
-# def index():
-#     sms = fetch_sms() # fetches sms texts
-#     return render_template("index.html", sms=sms)
