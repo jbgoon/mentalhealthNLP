@@ -1,7 +1,6 @@
-import twint
-import pandas as pd
 
-def pull_tweets(keyword, limit):
+
+def pull_tweets_keyword(keyword, limit):
     # keyword = string for what to look for in tweets
     # limit = max # of tweets
     

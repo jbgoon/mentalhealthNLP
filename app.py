@@ -1,31 +1,21 @@
-import requests
-from twilio.rest import Client
 from flask import Flask, request, redirect
 from twilio.twiml.messaging_response import MessagingResponse
-from create_model import *
+from alecc_responses import Alecc
 
 app = Flask(__name__)
 
+@app.route("/sms", methods=['GET', 'POST'])
+def sms_reply():
+    # Get recent text from user
+    body = request.values.get('Body', None)
+    bot = Alecc(body)
+    message = bot.response()
 
-def get_state(text):
-    if is_concern(text):
-        return True
-    return False
+    # Start our TwiML response
+    # Then add a message
+    resp = MessagingResponse()
+    resp.message(message)
+    return str(resp)
 
-
-@app.route('/sms', methods=['GET', 'POST'])
-def sms():
-    input_message = request.values.get('Body').lower()  # gets incoming message
-    bot_response = MessagingResponse()
-    state = get_state(input_message)
-
-    if state:  # based on incoming message, send different message
-        bot_response.message('There is a potential mental health concern.')
-    else:
-        bot_response.message('Good to go!')
-
-    return str(bot_response)
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
