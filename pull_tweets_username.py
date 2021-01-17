@@ -21,7 +21,7 @@ def pull_tweets_username(username):
 
 
 def main():
-       pull_tweets_username("zxcvbnm")
+       pull_tweets_username(username)
 
 
 if __name__ == '__main__':
