@@ -28,7 +28,7 @@ class Alecc:
                 tweets = tweets.tolist()
                 prediction, freq = is_concern_array(tweets)
                 percent_depressed = freq*100
-                response = "After reading @"+username+"'s latest tweets, "+str(percent_depressed)[:3]+"% of the tweets showed signs of mental health concern."
+                response = "After reading @"+username+"'s latest tweets, "+str(percent_depressed)[:4]+"% of the tweets showed signs of mental health concern."
             else: #no tweets found
                 response = "I could not retrieve any recent tweets. Try re-typing the username and make sure to include the @ symbol. Also make sure that the account is public and has been active since January 2020. For example, you could send me: @ucdavis"
         elif "self care" in message:

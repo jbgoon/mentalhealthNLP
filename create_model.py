@@ -86,7 +86,7 @@ def is_concern(text):
     data_site = pd.read_csv('combined_tweets.csv')
     depressed = data_site[data_site['label']==1]
     normal = data_site[data_site['label']==0]
-    normal = normal.sample(n=len(depressed))
+    normal = normal.sample(n=int(1.5*len(depressed)))
     frames = [depressed, normal]
     data_site = pd.concat(frames)
     data_site = data_site.sample(frac=1)
@@ -118,7 +118,7 @@ def is_concern_array(string_list):
     data_site = pd.read_csv('combined_tweets.csv')
     depressed = data_site[data_site['label'] == 1]
     normal = data_site[data_site['label'] == 0]
-    normal = normal.sample(n=len(depressed))
+    normal = normal.sample(n=int(1.5*len(depressed)))
     frames = [depressed, normal]
     data_site = pd.concat(frames)
     data_site = data_site.sample(frac=1)
