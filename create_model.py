@@ -147,7 +147,7 @@ def is_concern_array(string_list):
         if i == 1:
             count += 1
     freq = count/len(prediction)
-
+    
     # check for false negatives
     predictions = []
     for text, pred in zip(string_list,prediction):
@@ -158,3 +158,4 @@ def is_concern_array(string_list):
                 predictions.append(0)
 
     return predictions, freq
+
