@@ -45,7 +45,7 @@ def clean_tweets(tweets_df):
 # split into train and test
 def get_train_test(tweets_df):
     # create column with clean tweet
-    x_train, x_test, y_train, y_test = train_test_split(tweets_df['clean_tweet'], tweets_df['label'], test_size=0.3)
+    x_train, x_test, y_train, y_test = train_test_split(tweets_df['clean_tweet'], tweets_df['label'], test_size=0.3, shuffle=True)
 
     # get train data features
     features = [tweet for tweet in x_train]
@@ -68,6 +68,19 @@ def naive_bayes(x_train, x_test, y_train, y_test):
     return accuracy, model
 
 
+def flag_false_neg(text):
+    # list of red flag terms that should signal a mental health concern
+    red_flags = ['die', 'depression', 'anxiety', 'kill myself', 'dying', 'help me', 'suicide', 'pill', 'pain',
+                 'i need help', 'panic attack', 'abuse', 'shoot']
+
+    # check if text contains a red flag
+    for flag in red_flags:
+        if flag in text:
+            return True
+
+    return False
+
+
 def is_concern(text):
     # get data
     data_site = pd.read_csv('combined_tweets.csv')
@@ -86,6 +99,10 @@ def is_concern(text):
 
     # classify text using model
     prediction = int(model.predict(text_tfidf))
+
+    # test for false negatives
+    if flag_false_neg(text):
+        prediction = 1
 
     return prediction
 
@@ -119,4 +136,13 @@ def is_concern_array(string_list):
             count += 1
     freq = count/len(prediction)
 
-    return prediction, freq
+    # check for false negatives
+    predictions = []
+    for text, pred in zip(string_list,prediction):
+        if pred == 0:
+            if flag_false_neg(text):
+                predictions.append(1)
+            else:
+                predictions.append(0)
+
+    return predictions, freq
