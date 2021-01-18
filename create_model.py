@@ -84,6 +84,12 @@ def flag_false_neg(text):
 def is_concern(text):
     # get data
     data_site = pd.read_csv('combined_tweets.csv')
+    depressed = data_site[data_site['label']==1]
+    normal = data_site[data_site['label']==0]
+    normal = normal.sample(n=len(depressed))
+    frames = [depressed, normal]
+    data_site = pd.concat(frames)
+    data_site = data_site.sample(frac=1)
     processed = clean_tweets(data_site)
 
     # build model
@@ -110,6 +116,12 @@ def is_concern(text):
 def is_concern_array(string_list):
     # get data
     data_site = pd.read_csv('combined_tweets.csv')
+    depressed = data_site[data_site['label'] == 1]
+    normal = data_site[data_site['label'] == 0]
+    normal = normal.sample(n=len(depressed))
+    frames = [depressed, normal]
+    data_site = pd.concat(frames)
+    data_site = data_site.sample(frac=1)
     processed = clean_tweets(data_site)
 
     # build model
@@ -136,6 +148,7 @@ def is_concern_array(string_list):
             count += 1
     freq = count/len(prediction)
 
+<<<<<<< HEAD
     # check for false negatives
     predictions = []
     for text, pred in zip(string_list,prediction):
@@ -146,3 +159,6 @@ def is_concern_array(string_list):
                 predictions.append(0)
 
     return predictions, freq
+=======
+    return prediction, freq
+>>>>>>> 986ee6bc3e948a9716af53bab1bff5cdcb6f8595
