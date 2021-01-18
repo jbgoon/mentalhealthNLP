@@ -88,3 +88,35 @@ def is_concern(text):
     prediction = int(model.predict(text_tfidf))
 
     return prediction
+
+
+def is_concern_array(string_list):
+    # get data
+    data_site = pd.read_csv('combined_tweets.csv')
+    processed = clean_tweets(data_site)
+
+    # build model
+    x_train, x_test, y_train, y_test, features = get_train_test(processed)
+    accuracy, model = naive_bayes(x_train, x_test, y_train, y_test)
+
+    # clean up input message
+    clean = []
+    for i in string_list:
+        clean_text = process_text(i)
+        clean.append(clean_text)
+
+    # vectorize input text with tfidf
+    vectorizer = TfidfVectorizer(vocabulary=features, use_idf=True, lowercase=False)
+    text_tfidf = vectorizer.fit_transform(clean)
+
+    # classify text using model
+    prediction = model.predict(text_tfidf)
+
+    # calculate percent of items with concern
+    count = 0
+    for i in prediction:
+        if i == 1:
+            count += 1
+    freq = count/len(prediction)
+
+    return prediction, freq

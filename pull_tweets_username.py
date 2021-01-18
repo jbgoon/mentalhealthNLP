@@ -4,8 +4,8 @@ import pandas as pd
 def pull_tweets_username(username):
     c = twint.Config()
     c.Username = username
-    c.Limit = 50
-    c.Since = "2020-12-01 00:00:00"
+    c.Limit = 500
+    c.Since = "2018-01-01 00:00:00"
     c.Pandas = True
     c.Hide_output = True
     twint.run.Search(c)
@@ -15,13 +15,12 @@ def pull_tweets_username(username):
         tweets_df = tweets_df.tweet
         return tweets_df
     except:
-        print("there was an error")
-        return 0
+        return []
 
 
 
 def main():
-       pull_tweets_username("zxcvbnm")
+       pull_tweets_username("ucdavis")
 
 
 if __name__ == '__main__':
