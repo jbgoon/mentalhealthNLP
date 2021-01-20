@@ -1,9 +1,9 @@
-# mentalhealthNLP
-HackDavis 2021 project!
+# ALECC: Aggies Love Existential Crisis Chatbot
+## A mental health chatbot for the modern age
+### HACKDAVIS2020
+#### By Staci Tilley, Jack Goon, Sneha Pullanoor, & Katya Katsy
 
-Our chat bot's name is ALECC!
-
-BERT source: [text classification w BERT tokenizer](https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/)
+Text 530-298-8024 to chat with ALECC!
 
 
 
